@@ -1,7 +1,7 @@
 import React from "react";
 
 const AuthRegister = () => {
-  return <div>register</div>;
+  return <div>Register</div>;
 };
 
 export default AuthRegister;
