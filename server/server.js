@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,9 +27,7 @@ app.use(
 
 // MongoDB connection first, then start server
 mongoose
-  .connect(
-    "mongodb+srv://arunpanigrahi94:arun1234@mern-cluster.voihhbh.mongodb.net/"
-  )
+  .connect(process.env.MONGo_URL)
   .then(() => {
     console.log("✅ DB connected successfully");
 
