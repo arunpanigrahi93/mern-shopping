@@ -1,12 +1,34 @@
-import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
-const CheckAuth = ({ isAuthenticated, user, children }) => {
+function CheckAuth({ isAuthenticated, user, children }) {
   const location = useLocation();
 
+  // Debugging: log current route and authentication status
+  //   console.log(location.pathname, isAuthenticated);
+
   /**
-   * 1. If user is NOT authenticated and trying to access any page
-   *    other than /login or /register → Redirect to /auth/login
+   * 1. Handle root path "/"
+   *    - If NOT authenticated → redirect to login
+   *    - If authenticated:
+   *        - Admin → go to /admin/dashboard
+   *        - Normal user → go to /shop/home
+   */
+  if (location.pathname === "/") {
+    if (!isAuthenticated) {
+      return <Navigate to="/auth/login" replace />;
+    } else {
+      if (user?.role === "admin") {
+        return <Navigate to="/admin/dashboard" replace />;
+      } else {
+        return <Navigate to="/shop/home" replace />;
+      }
+    }
+  }
+
+  /**
+   * 2. Block unauthenticated users from accessing protected pages
+   *    - Only allow access to /login and /register
+   *    - Any other route redirects to /auth/login
    */
   if (
     !isAuthenticated &&
@@ -19,10 +41,9 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
   }
 
   /**
-   * 2. If user IS authenticated and tries to access login/register,
-   *    redirect based on their role:
-   *      - Admin → /admin/dashboard
-   *      - Normal user → /shop/home
+   * 3. Prevent authenticated users from going back to login/register
+   *    - Admin → redirect to /admin/dashboard
+   *    - Normal user → redirect to /shop/home
    */
   if (
     isAuthenticated &&
@@ -37,8 +58,8 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
   }
 
   /**
-   * 3. If user IS authenticated but NOT an admin,
-   *    and tries to access an admin page → Redirect to /unauth-page
+   * 4. Restrict non-admin users from accessing admin routes
+   *    - Example: normal user tries /admin/dashboard → redirect to /unauth-page
    */
   if (
     isAuthenticated &&
@@ -49,8 +70,8 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
   }
 
   /**
-   * 4. If user IS authenticated and IS an admin,
-   *    but tries to access shop pages → Redirect to /admin/dashboard
+   * 5. Restrict admins from accessing shop routes
+   *    - Example: admin tries /shop/home → redirect back to /admin/dashboard
    */
   if (
     isAuthenticated &&
@@ -61,9 +82,11 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
   }
 
   /**
-   * 5. Default case → Render the requested page (children)
+   * 6. Default case:
+   *    - If none of the above conditions matched,
+   *      render the requested route/page (children)
    */
   return <>{children}</>;
-};
+}
 
 export default CheckAuth;
