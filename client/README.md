@@ -1,12 +1,68 @@
-# React + Vite
+Client Setup
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Install required dependencies:
 
-Currently, two official plugins are available:
+npm install axios react-router-dom @reduxjs/toolkit react-redux tailwindcss
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+Go to ShadCN UI and Vite config docs, then follow steps to install TailwindCSS and ShadCN.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+⚙️ Configuration
+
+Configure Redux store and create auth slice.
+
+Configure React Router DOM for routing.
+
+📂 Project Structure
+
+Create two main folders inside src:
+
+components/
+
+pages/
+
+🔑 Auth Setup
+
+In components/auth/ → Create Layout.jsx
+
+Contains common left-side banner and Outlet to switch between login/register.
+
+In pages/auth/ → Create:
+
+Login.jsx
+
+Register.jsx
+
+🔑 Admin & Shopping Views
+
+Same procedure as auth:
+
+Create common sidebar + header in components/admin/ and components/shop/.
+
+Each has its own Layout.jsx with Outlet to load child pages.
+
+In pages/admin/ → Add files like Dashboard.jsx, etc.
+
+In pages/shop/ → Add files like Home.jsx, etc.
+
+🚏 Routing
+
+In App.jsx, define routes:
+
+/auth → uses AuthLayout with children (Login, Register)
+
+/admin → uses AdminLayout with children (Dashboard, etc.)
+
+/shop → uses ShopLayout with children (Home, etc.)
+
+🔐 Route Protection
+
+Create a common/CheckAuth.jsx file.
+
+This component validates authentication & roles for all routes.
+
+Attach <CheckAuth> to each route and pass props:
+
+<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+  <AdminLayout />
+</CheckAuth>

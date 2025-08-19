@@ -17,7 +17,7 @@ import ShoppingListing from "./pages/shopping-view/listing";
 import CheckAuth from "./components/common/check-auth";
 
 function App() {
-  const isAuthenticated = true;
+  const isAuthenticated = false;
   const user = { role: "admin" };
   return (
     <div className="flex flex-col overflow-hidden bg-white">
